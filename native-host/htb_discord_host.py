@@ -92,6 +92,12 @@ def send_native_message(message: Dict[str, Any]) -> None:
     sys.stdout.buffer.flush()
 
 
+def reply(base: Dict[str, Any], request_id: Any) -> None:
+    if isinstance(request_id, int):
+        base["requestId"] = request_id
+    send_native_message(base)
+
+
 def main() -> int:
     rpc = DiscordRPC()
     send_native_message({"type": "ready"})
@@ -102,20 +108,21 @@ def main() -> int:
             break
 
         command = (message.get("command") or "").strip().lower()
+        request_id = message.get("requestId")
 
         try:
             if command == "update":
                 rpc.update(message)
-                send_native_message({"type": "ok", "command": "update"})
+                reply({"type": "ok", "command": "update"}, request_id)
             elif command == "clear":
                 rpc.clear(message)
-                send_native_message({"type": "ok", "command": "clear"})
+                reply({"type": "ok", "command": "clear"}, request_id)
             elif command == "ping":
-                send_native_message({"type": "pong"})
+                reply({"type": "pong"}, request_id)
             else:
-                send_native_message({"type": "error", "message": f"Unknown command: {command}"})
+                reply({"type": "error", "message": f"Unknown command: {command}"}, request_id)
         except Exception as err:
-            send_native_message({"type": "error", "message": str(err)})
+            reply({"type": "error", "message": str(err)}, request_id)
 
     rpc.close()
     return 0

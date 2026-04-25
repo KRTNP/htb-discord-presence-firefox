@@ -6,6 +6,7 @@
   "permissions": [
     "storage",
     "nativeMessaging",
+    "tabs",
     "https://app.hackthebox.com/*",
     "https://www.hackthebox.com/*"
   ],
