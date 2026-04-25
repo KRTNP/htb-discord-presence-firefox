@@ -1,0 +1,45 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HTB Presence Options</title>
+  <style>
+    body { font-family: sans-serif; max-width: 760px; margin: 24px auto; padding: 0 16px; line-height: 1.45; }
+    h1 { margin-top: 0; }
+    label { display: block; margin-top: 12px; font-weight: 600; }
+    input[type="text"], input[type="number"] { width: 100%; box-sizing: border-box; padding: 10px; margin-top: 6px; }
+    .row { margin-top: 14px; }
+    button { margin-top: 18px; padding: 10px 16px; cursor: pointer; }
+    .hint { color: #555; font-size: 0.92rem; }
+    .ok { margin-top: 12px; color: #0a7f2e; }
+  </style>
+</head>
+<body>
+  <h1>Hack The Box Discord Presence</h1>
+
+  <div class="row">
+    <label>
+      <input id="enabled" type="checkbox" /> Enable Discord presence
+    </label>
+  </div>
+
+  <label for="clientId">Discord Application Client ID</label>
+  <input id="clientId" type="text" placeholder="123456789012345678" />
+  <div class="hint">Create an app at discord developer portal and copy its Client ID.</div>
+
+  <label for="imageKey">Large Image Key (optional)</label>
+  <input id="imageKey" type="text" placeholder="htb_logo" />
+
+  <label for="imageText">Large Image Text (optional)</label>
+  <input id="imageText" type="text" placeholder="Hack The Box" />
+
+  <label for="pollingSeconds">Polling seconds</label>
+  <input id="pollingSeconds" type="number" min="10" max="120" value="20" />
+
+  <button id="saveBtn">Save</button>
+  <div id="status" class="ok"></div>
+
+  <script src="options.js"></script>
+</body>
+</html>

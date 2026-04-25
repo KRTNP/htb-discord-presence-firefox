@@ -1,0 +1,39 @@
+﻿{
+  "manifest_version": 2,
+  "name": "Hack The Box Discord Presence",
+  "version": "1.0.0",
+  "description": "Update Discord Rich Presence from Hack The Box activity in Firefox.",
+  "permissions": [
+    "storage",
+    "nativeMessaging",
+    "https://app.hackthebox.com/*",
+    "https://www.hackthebox.com/*"
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "htb-presence@local"
+    }
+  },
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://app.hackthebox.com/*",
+        "https://www.hackthebox.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "browser_action": {
+    "default_title": "HTB Presence",
+    "default_popup": "popup.html"
+  }
+}
