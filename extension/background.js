@@ -15,6 +15,7 @@ let lastClientId = "";
 let activeTabId = null;
 let requestSeq = 1;
 let refreshChain = Promise.resolve();
+let intentionalDisconnect = false;
 
 const tabPresence = new Map();
 const pendingRequests = new Map();
@@ -67,7 +68,9 @@ function ensureNativePort() {
         log("Native host disconnected:", err.message);
       }
       nativePort = null;
-      settleAllPending("Native host disconnected");
+      const reason = intentionalDisconnect ? "Intentional disconnect" : "Native host disconnected";
+      intentionalDisconnect = false;
+      settleAllPending(reason);
       if (reconnectWanted) {
         scheduleReconnect();
       }
@@ -105,6 +108,7 @@ function stopReconnect() {
 
 function disconnectNative() {
   if (nativePort) {
+    intentionalDisconnect = true;
     try {
       nativePort.disconnect();
     } catch (_err) {
@@ -198,9 +202,13 @@ function sendUpdateWithSettings(settings, update) {
 
 async function clearPresenceWithClientId(clientId) {
   const effectiveClientId = String(clientId || lastClientId || "").trim();
+  const hadPresence = lastPayloadHash !== "";
   lastPayloadHash = "";
 
   if (!effectiveClientId) {
+    return;
+  }
+  if (!hadPresence && !nativePort) {
     return;
   }
 
@@ -225,7 +233,9 @@ async function refreshPresence() {
     try {
       await clearPresenceWithClientId(settings.discordClientId);
     } catch (err) {
-      log("clear before disconnect error", err);
+      if (!String(err && err.message || err).includes("Intentional disconnect")) {
+        log("clear before disconnect error", err);
+      }
     }
     stopReconnect();
     disconnectNative();
@@ -237,7 +247,9 @@ async function refreshPresence() {
     try {
       await clearPresenceWithClientId(settings.discordClientId);
     } catch (err) {
-      log("clear before idle disconnect error", err);
+      if (!String(err && err.message || err).includes("Intentional disconnect")) {
+        log("clear before idle disconnect error", err);
+      }
     }
     stopReconnect();
     disconnectNative();
