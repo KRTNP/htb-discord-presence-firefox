@@ -1,4 +1,4 @@
-﻿# HTB Discord Presence for Firefox
+﻿# HTB Discord Presence for Firefox (VibeCoding)
 
 Discord Rich Presence integration for Hack The Box on **Firefox (Kali Linux)**.
 
@@ -92,7 +92,3 @@ What this does:
 - `extension/options.html`
 - `native-host/htb_discord_host.py`
 - `install_native_host.sh`
-
-## License
-
-MIT (you can change this if needed)
